@@ -1,0 +1,10 @@
+C:\Users\cbarr\Workspace\StudentExercisesAPI\bin\Debug\netcoreapp3.0\appsettings.Development.json
+C:\Users\cbarr\Workspace\StudentExercisesAPI\bin\Debug\netcoreapp3.0\appsettings.json
+C:\Users\cbarr\Workspace\StudentExercisesAPI\bin\Debug\netcoreapp3.0\Properties\launchSettings.json
+C:\Users\cbarr\Workspace\StudentExercisesAPI\bin\Debug\netcoreapp3.0\StudentExercisesAPI.exe
+C:\Users\cbarr\Workspace\StudentExercisesAPI\obj\Debug\netcoreapp3.0\StudentExercisesAPI.csprojAssemblyReference.cache
+C:\Users\cbarr\Workspace\StudentExercisesAPI\obj\Debug\netcoreapp3.0\staticwebassets\StudentExercisesAPI.StaticWebAssets.Manifest.cache
+C:\Users\cbarr\Workspace\StudentExercisesAPI\obj\Debug\netcoreapp3.0\staticwebassets\StudentExercisesAPI.StaticWebAssets.xml
+C:\Users\cbarr\Workspace\StudentExercisesAPI\obj\Debug\netcoreapp3.0\StudentExercisesAPI.AssemblyInfoInputs.cache
+C:\Users\cbarr\Workspace\StudentExercisesAPI\obj\Debug\netcoreapp3.0\StudentExercisesAPI.AssemblyInfo.cs
+C:\Users\cbarr\Workspace\StudentExercisesAPI\obj\Debug\netcoreapp3.0\StudentExercisesAPI.RazorTargetAssemblyInfo.cache
