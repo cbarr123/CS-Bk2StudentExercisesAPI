@@ -84,14 +84,14 @@ namespace StudentExercisesAPI.Controllers
 
                     if (reader.Read())
                     {
-                       student = new Student
+                        student = new Student
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Fname = reader.GetString(reader.GetOrdinal("Fname")),
                             Lname = reader.GetString(reader.GetOrdinal("Lname")),
                             SlackHandle = reader.GetString(reader.GetOrdinal("SlackHandle")),
                             CohortId = reader.GetInt32(reader.GetOrdinal("CohortId"))
-                       };
+                        };
                     }
                     reader.Close();
                     return Ok(student);
@@ -134,13 +134,17 @@ namespace StudentExercisesAPI.Controllers
                     conn.Open();
                     using (SqlCommand cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = @"UPDATE Exercise
-                                                SET Ename = @Ename,
-                                                    Elanguage = @Elanguage
-                                                    WHERE Id = @id";
-                        cmd.Parameters.Add(new SqlParameter("@Ename", exercise.Ename));
-                        cmd.Parameters.Add(new SqlParameter("@Elanguage", exercise.Elanguage));
-                        cmd.Parameters.Add(new SqlParameter("@id", exercise.Id));
+                        cmd.CommandText = @"UPDATE Student
+                                                SET Fname = @Fname,
+                                                    Lname = @Lname,
+                                                    SlackHandle = @SlackHandle,
+                                                    CohortId = @CohortId
+                                                WHERE Id = @id";
+                        cmd.Parameters.Add(new SqlParameter("@Fname", student.Fname));
+                        cmd.Parameters.Add(new SqlParameter("@Lname", student.Lname));
+                        cmd.Parameters.Add(new SqlParameter("@id", student.Id));
+                        cmd.Parameters.Add(new SqlParameter("@SlackHandle", student.SlackHandle));
+                        cmd.Parameters.Add(new SqlParameter("@CohortId", student.CohortId));
 
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
@@ -153,7 +157,7 @@ namespace StudentExercisesAPI.Controllers
             }
             catch (Exception)
             {
-                if (!ExerciseExists(id))
+                if (!StudentExists(id))
                 {
                     return NotFound();
                 }
@@ -163,7 +167,7 @@ namespace StudentExercisesAPI.Controllers
                 }
             }
         }
-        private bool ExerciseExists(int id)
+        private bool StudentExists(int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -171,8 +175,8 @@ namespace StudentExercisesAPI.Controllers
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, Ename, Elanguage
-                        FROM Exercise
+                        SELECT Id, Fname, Lname, SlackHandle, CohortId
+                        FROM Student
                         WHERE Id = @id";
                     cmd.Parameters.Add(new SqlParameter("@id", id));
 
@@ -184,8 +188,15 @@ namespace StudentExercisesAPI.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            try
+            {
+
+            }
         }
+
+
+
     }
 }
