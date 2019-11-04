@@ -61,47 +61,130 @@ namespace StudentExercisesAPI.Controllers
         }
 
         // GET: api/Instructor/5
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{id}", Name = "GetById")]
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, Fname, Lname, SlackHandle, CohortId
-                                            FROM Student";
+                    cmd.CommandText = @"
+                        SELECT Id, Fname, Lname, SlackHandle, CohortId, Specialty
+                            FROM Instructor
+                            WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
                     SqlDataReader reader = cmd.ExecuteReader();
-                    List<Student> students = new List<Student>();
-                    while (reader.Read())
+
+                    Instructor instructor = null;
+
+                    if (reader.Read())
                     {
-                        Student newStudent = new Student()
+                        instructor = new Instructor
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Fname = reader.GetString(reader.GetOrdinal("Fname")),
                             Lname = reader.GetString(reader.GetOrdinal("Lname")),
                             SlackHandle = reader.GetString(reader.GetOrdinal("SlackHandle")),
-                            CohortId = reader.GetInt32(reader.GetOrdinal("CohortId"))
+                            CohortId = reader.GetInt32(reader.GetOrdinal("CohortId")),
+                            Specialty = reader.GetString(reader.GetOrdinal("Specialty")),
                         };
-                        students.Add(newStudent);
                     }
                     reader.Close();
-                    return Ok(students);
-                };
+                    return Ok(instructor);
+                }
             }
         }
 
 
         // POST: api/Instructor
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] Instructor instructor)
         {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Instructor (Fname, Lname, SlackHandle, CohortId, Specialty)
+                                            OUTPUT INSERTED.Id
+                                            VALUES (@Fname, @Lname, @SlackHandle, @CohortId. @Specialty)";
+                    cmd.Parameters.Add(new SqlParameter("@Fname", instructor.Fname));
+                    cmd.Parameters.Add(new SqlParameter("@Lname", instructor.Lname));
+                    cmd.Parameters.Add(new SqlParameter("@SlackHandle", instructor.SlackHandle));
+                    cmd.Parameters.Add(new SqlParameter("@CohortId", instructor.CohortId));
+                    cmd.Parameters.Add(new SqlParameter("@Specialty", instructor.Specialty));
+
+                    int newId = (int)cmd.ExecuteScalar();
+                    instructor.Id = newId;
+                    return CreatedAtRoute("GetById", new { id = newId }, instructor);
+                }
+            }
         }
 
         // PUT: api/Instructor/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Instructor instructor)
         {
+            try
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE Instructor
+                                                SET Fname = @Fname,
+                                                    Lname = @Lname,
+                                                    SlackHandle = @SlackHandle,
+                                                    CohortId = @CohortId
+                                                    Specialty = @Specialty
+                                                WHERE Id = @id";
+                        cmd.Parameters.Add(new SqlParameter("@Fname", instructor.Fname));
+                        cmd.Parameters.Add(new SqlParameter("@Lname", instructor.Lname));
+                        cmd.Parameters.Add(new SqlParameter("@id", instructor.Id));
+                        cmd.Parameters.Add(new SqlParameter("@SlackHandle", instructor.SlackHandle));
+                        cmd.Parameters.Add(new SqlParameter("@CohortId", instructor.CohortId));
+                        cmd.Parameters.Add(new SqlParameter("@Specialty", instructor.Specialty));
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return new StatusCodeResult(StatusCodes.Status204NoContent);
+                        }
+                        throw new Exception("No rows affected");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!InstructorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+        private bool InstructorExists(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Fname, Lname, SlackHandle, CohortId, Specialty
+                        FROM Instructor
+                        WHERE Id = @id";
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    return reader.Read();
+                }
+            }
         }
 
         // DELETE: api/ApiWithActions/5

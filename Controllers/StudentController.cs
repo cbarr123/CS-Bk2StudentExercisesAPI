@@ -29,10 +29,6 @@ namespace StudentExercisesAPI.Controllers
         }
 
 
-
-
-
-
         // GET: api/Student
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -65,7 +61,7 @@ namespace StudentExercisesAPI.Controllers
         }
 
         // GET: api/Student/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetStudentById")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             using (SqlConnection conn = Connection)
@@ -118,7 +114,7 @@ namespace StudentExercisesAPI.Controllers
 
                     int newId = (int)cmd.ExecuteScalar();
                     student.Id = newId;
-                    return CreatedAtRoute("GetStudent", new { id = newId }, student);
+                    return CreatedAtRoute("GetStudentById", new { id = newId }, student);
                 }
             }
         }
