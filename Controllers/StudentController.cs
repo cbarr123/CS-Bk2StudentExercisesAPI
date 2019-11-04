@@ -187,14 +187,14 @@ namespace StudentExercisesAPI.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            try
-            {
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete([FromRoute] int id)
+        //{
+            //try
+            //{
 
-            }
-        }
+            //}
+        //}
 
 
 
